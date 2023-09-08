@@ -1,137 +1,69 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": 8,
-   "id": "f82482fe",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "import streamlit as st\n",
-    "import pickle\n",
-    "from sklearn.feature_extraction.text import TfidfVectorizer\n",
-    "from PIL import Image\n",
-    "import re\n",
-    "import string\n",
-    "import nltk\n",
-    "import spacy\n",
-    "\n",
-    "with open(\"svm_model.pkl\", \"rb\") as file:\n",
-    "    model = pickle.load(file)\n",
-    "\n",
-    "with open(\"Tfidf_vectorizer.pk\", \"rb\") as file:\n",
-    "    vectorizer = pickle.load(file)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 9,
-   "id": "3b037779",
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "[nltk_data] Downloading package stopwords to\n",
-      "[nltk_data]     C:\\Users\\devis\\AppData\\Roaming\\nltk_data...\n",
-      "[nltk_data]   Package stopwords is already up-to-date!\n"
-     ]
-    }
-   ],
-   "source": [
-    "nltk.download('stopwords')\n",
-    "stopwords = nltk.corpus.stopwords.words('english')\n",
-    "\n",
-    "def clean_text(text):\n",
-    "    text = text.lower()\n",
-    "    return text.strip()\n",
-    "\n",
-    "def remove_punctuation(text):\n",
-    "    punctuation_free = \"\".join([i for i in text if i not in string.punctuation])\n",
-    "    return punctuation_free\n",
-    "\n",
-    "def tokenization(text):\n",
-    "    tokens = re.split(' ', text)\n",
-    "    return tokens\n",
-    "\n",
-    "def remove_stopwords(text):\n",
-    "    output = \" \".join(i for i in text if i not in stopwords)\n",
-    "    return output\n",
-    "\n",
-    "def lemmatizer(text):\n",
-    "    nlp = spacy.load('en_core_web_sm')\n",
-    "    doc = nlp(text)\n",
-    "    sent = [token.lemma_ for token in doc if not token.text in set(stopwords)]\n",
-    "    return ' '.join(sent)\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 10,
-   "id": "6c186689",
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "2023-09-08 12:52:16.480 `label` got an empty value. This is discouraged for accessibility reasons and may be disallowed in the future by raising an exception. Please provide a non-empty label and hide it with label_visibility if needed.\n"
-     ]
-    }
-   ],
-   "source": [
-    "st.title(\"Sentiment Analysis App\")\n",
-    "st.markdown(\"By Devi Sree\")\n",
-    "image = Image.open(\"sentiment.png\")\n",
-    "st.image(image, use_column_width=True)\n",
-    "\n",
-    "st.subheader(\"Enter your text here:\")\n",
-    "user_input = st.text_area(\"\")\n",
-    "\n",
-    "if user_input:\n",
-    "    user_input = clean_text(user_input)\n",
-    "    user_input = remove_punctuation(user_input)\n",
-    "    user_input = user_input.lower()\n",
-    "    user_input = tokenization(user_input)\n",
-    "    user_input = remove_stopwords(user_input)\n",
-    "    user_input = lemmatizer(user_input)\n",
-    "\n",
-    "if st.button(\"Predict\"):\n",
-    "    if user_input:\n",
-    "        text_vectorized = vectorizer.transform([user_input])\n",
-    "        prediction = model.predict(text_vectorized)[0]\n",
-    "        st.header(\"Prediction:\")\n",
-    "        if prediction == -1:\n",
-    "            st.subheader(\"The sentiment of the given text is: Negative\")\n",
-    "        elif prediction == 0:\n",
-    "            st.subheader(\"The sentiment of the given text is: Neutral\")\n",
-    "        elif prediction == 1:\n",
-    "            st.subheader(\"The sentiment of the given text is: Positive\")\n",
-    "    else:\n",
-    "        st.subheader(\"Please enter a text for prediction.\")"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3 (ipykernel)",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.10.4"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 5
-}
+import streamlit as st
+import pickle
+from sklearn.feature_extraction.text import TfidfVectorizer
+from PIL import Image
+import re
+import string
+import nltk
+import spacy
+
+with open("svm_model.pkl", "rb") as file:
+    model = pickle.load(file)
+
+with open("Tfidf_vectorizer.pk", "rb") as file:
+    vectorizer = pickle.load(file)
+
+nltk.download('stopwords')
+stopwords = nltk.corpus.stopwords.words('english')
+
+def clean_text(text):
+    text = text.lower()
+    return text.strip()
+
+def remove_punctuation(text):
+    punctuation_free = "".join([i for i in text if i not in string.punctuation])
+    return punctuation_free
+
+def tokenization(text):
+    tokens = re.split(' ', text)
+    return tokens
+
+def remove_stopwords(text):
+    output = " ".join(i for i in text if i not in stopwords)
+    return output
+
+def lemmatizer(text):
+    nlp = spacy.load('en_core_web_sm')
+    doc = nlp(text)
+    sent = [token.lemma_ for token in doc if not token.text in set(stopwords)]
+    return ' '.join(sent)
+
+st.title("Sentiment Analysis App")
+st.markdown("By Nirmal Gaud")
+image = Image.open("sentiment.png")
+st.image(image, use_column_width=True)
+
+st.subheader("Enter your text here:")
+user_input = st.text_area("")
+
+if user_input:
+    user_input = clean_text(user_input)
+    user_input = remove_punctuation(user_input)
+    user_input = user_input.lower()
+    user_input = tokenization(user_input)
+    user_input = remove_stopwords(user_input)
+    user_input = lemmatizer(user_input)
+
+if st.button("Predict"):
+    if user_input:
+        text_vectorized = vectorizer.transform([user_input])
+        prediction = model.predict(text_vectorized)[0]
+        st.header("Prediction:")
+        if prediction == -1:
+            st.subheader("The sentiment of the given text is: Negative")
+        elif prediction == 0:
+            st.subheader("The sentiment of the given text is: Neutral")
+        elif prediction == 1:
+            st.subheader("The sentiment of the given text is: Positive")
+    else:
+        st.subheader("Please enter a text for prediction.")
