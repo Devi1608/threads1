@@ -2,10 +2,22 @@
  "cells": [
   {
    "cell_type": "code",
-   "execution_count": 3,
+   "execution_count": 1,
    "id": "bce8eb82",
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "2023-09-08 16:07:43.668 \n",
+      "  \u001b[33m\u001b[1mWarning:\u001b[0m to view this Streamlit app on a browser, run it with the following\n",
+      "  command:\n",
+      "\n",
+      "    streamlit run C:\\Users\\devis\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\ipykernel_launcher.py [ARGUMENTS]\n"
+     ]
+    }
+   ],
    "source": [
     "import pickle\n",
     "import streamlit as st\n",
@@ -73,7 +85,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 4,
+   "execution_count": 2,
    "id": "aa97c570",
    "metadata": {},
    "outputs": [
@@ -129,14 +141,6 @@
     "joblib_version = joblib.__version__\n",
     "print(f\"joblib version: {joblib_version}\")\n"
    ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": "null",
-   "id": "2855a165",
-   "metadata": {},
-   "outputs": [],
-   "source": []
   }
  ],
  "metadata": {
